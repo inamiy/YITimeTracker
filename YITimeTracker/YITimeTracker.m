@@ -154,9 +154,7 @@ static YITimeTrackerDisplayStyle __style;
         
     }
     
-    if (completions.count > 0) {
-        [self _startTimeTrackingWithName:name completions:completions];
-    }
+    [self _startTimeTrackingWithName:name completions:completions];
     
 }
 
@@ -228,9 +226,7 @@ static YITimeTrackerDisplayStyle __style;
         
     }
     
-    if (completions.count > 0) {
-        [self _stopTimeTrackingWithName:name completions:completions];
-    }
+    [self _stopTimeTrackingWithName:name completions:completions];
 }
 
 @end

@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-#if defined(DEBUG) || defined(YI_DEBUG)
+#if defined(DEBUG) || defined(YI_DEBUG_TIME)
 #   define YI_TIME_START(name)  [YITimeTracker startTimeTrackingWithName:name]
 #   define YI_TIME_STOP(name)   [YITimeTracker stopTimeTrackingWithName:name]
 #else

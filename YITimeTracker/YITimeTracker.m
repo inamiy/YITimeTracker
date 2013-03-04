@@ -116,33 +116,37 @@ static YITimeTrackerDisplayStyle __style;
         
     }
     
-    // MTStatusBarOverlay
-    Class aMTStatusBarOverlayClass = NSClassFromString(@"MTStatusBarOverlay");
-    SEL aMTStatusBarOverlaySelector = NSSelectorFromString(@"postMessage:");
-    
-    if ((aMTStatusBarOverlayClass && [aMTStatusBarOverlayClass instancesRespondToSelector:aMTStatusBarOverlaySelector]) &&
-        ((__style & YITimeTrackerDisplayStyleMTStatusBarOverlay) || (isAutomatic && completions.count == 0))) {
-        
-        id instance = nil;
-        
-        if ([aMTStatusBarOverlayClass respondsToSelector:@selector(sharedOverlay)]) {
-            instance = [aMTStatusBarOverlayClass performSelector:@selector(sharedOverlay)];
-        }
-        
-        if (instance) {
-            [completions addObject:^{
-                NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[instance methodSignatureForSelector:aMTStatusBarOverlaySelector]];
-                invocation.target = instance;
-                invocation.selector = aMTStatusBarOverlaySelector;
-                
-                NSString* message = [self _startedMessageWithName:name];
-                [invocation setArgument:&message atIndex:2];
-                
-                [invocation invoke];
-            }];
-        }
-        
-    }
+    //
+    // COMMENT-OUT:
+    // Due to MTStatusBarOverlay's queueing & slow display, let's display only when stopped time-tracking.
+    //
+//    // MTStatusBarOverlay
+//    Class aMTStatusBarOverlayClass = NSClassFromString(@"MTStatusBarOverlay");
+//    SEL aMTStatusBarOverlaySelector = NSSelectorFromString(@"postMessage:");
+//    
+//    if ((aMTStatusBarOverlayClass && [aMTStatusBarOverlayClass instancesRespondToSelector:aMTStatusBarOverlaySelector]) &&
+//        ((__style & YITimeTrackerDisplayStyleMTStatusBarOverlay) || (isAutomatic && completions.count == 0))) {
+//        
+//        id instance = nil;
+//        
+//        if ([aMTStatusBarOverlayClass respondsToSelector:@selector(sharedOverlay)]) {
+//            instance = [aMTStatusBarOverlayClass performSelector:@selector(sharedOverlay)];
+//        }
+//        
+//        if (instance) {
+//            [completions addObject:^{
+//                NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[instance methodSignatureForSelector:aMTStatusBarOverlaySelector]];
+//                invocation.target = instance;
+//                invocation.selector = aMTStatusBarOverlaySelector;
+//                
+//                NSString* message = [self _startedMessageWithName:name];
+//                [invocation setArgument:&message atIndex:2];
+//                
+//                [invocation invoke];
+//            }];
+//        }
+//        
+//    }
     
     // NSLog
     if ((__style & YITimeTrackerDisplayStyleNSLog) || (isAutomatic && completions.count == 0)) {
@@ -186,7 +190,7 @@ static YITimeTrackerDisplayStyle __style;
     
     // MTStatusBarOverlay
     Class aMTStatusBarOverlayClass = NSClassFromString(@"MTStatusBarOverlay");
-    SEL aMTStatusBarOverlaySelector = NSSelectorFromString(@"postFinishMessage:duration:");
+    SEL aMTStatusBarOverlaySelector = NSSelectorFromString(@"postImmediateFinishMessage:duration:animated:");
     
     if ((aMTStatusBarOverlayClass && [aMTStatusBarOverlayClass instancesRespondToSelector:aMTStatusBarOverlaySelector]) &&
         ((__style & YITimeTrackerDisplayStyleMTStatusBarOverlay) || (isAutomatic && completions.count == 0))) {
@@ -208,6 +212,9 @@ static YITimeTrackerDisplayStyle __style;
                 
                 NSTimeInterval duration = 2;
                 [invocation setArgument:&duration atIndex:3];
+                
+                BOOL animated = YES;
+                [invocation setArgument:&animated atIndex:4];
                 
                 [invocation invoke];
             }];

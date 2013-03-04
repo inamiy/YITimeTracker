@@ -8,6 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
+#if defined(DEBUG) || defined(YI_DEBUG)
+#   define YI_TIME_START(name)  [YITimeTracker startTimeTrackingWithName:name]
+#   define YI_TIME_STOP(name)   [YITimeTracker stopTimeTrackingWithName:name]
+#else
+#   define YI_TIME_START(name)  ;
+#   define YI_TIME_STOP(name)   ;
+#endif
+
 
 typedef void (^YITimeTrackerStartBlock)(void);
 typedef void (^YITimeTrackerStopBlock)(NSTimeInterval elapsedTime);
